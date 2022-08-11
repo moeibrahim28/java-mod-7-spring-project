@@ -21,11 +21,11 @@ public class ReadingList {
     private String name;
 
     @ManyToOne
-    private BugUser user;
+    private User user;
 
-    @ManyToMany
-    @JoinTable(name="ReadingLists",
-            joinColumns = @JoinColumn(name = "user_username"),
-            inverseJoinColumns = @JoinColumn(name = "book_title"))
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "readingLists_books",
+            joinColumns = @JoinColumn(name = "readinglist_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id"))
     private List<Book> bookList;
 }

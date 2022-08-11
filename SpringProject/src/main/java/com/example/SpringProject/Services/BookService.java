@@ -1,17 +1,17 @@
 package com.example.SpringProject.Services;
 
-import com.example.SpringProject.DTO.BookDTO;
-import com.example.SpringProject.DTO.CreateBookDTO;
-import com.example.SpringProject.DTO.CreateUserDTO;
-import com.example.SpringProject.DTO.UserDTO;
+import com.example.SpringProject.DTO.*;
+import com.example.SpringProject.Exceptions.NotFoundException;
+import com.example.SpringProject.Exceptions.ValidationException;
+import com.example.SpringProject.Models.Author;
 import com.example.SpringProject.Models.Book;
 import com.example.SpringProject.Repositories.BookRepository;
-import com.example.SpringProject.Repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class BookService {
@@ -19,14 +19,46 @@ public class BookService {
     private BookRepository repository;
 
     @Autowired
+    private AuthorService authorService;
+
+    @Autowired
+    private GenreService genreService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
-    public CreateBookDTO create(CreateBookDTO createBookDTO) {
-        Book book = modelMapper.map(createBookDTO, Book.class);
-        return modelMapper.map(repository.save(book), CreateBookDTO.class);
+    public BookDTO create(CreateBookDTO createBookDTO) {
+        if (!repository.existsById(createBookDTO.getId())) {
+            Book book = new Book();
+            book.setPages(createBookDTO.getPages());
+            book.setTitle(createBookDTO.getTitle());
+            book.setAuthor(authorService.getAuthor(authorService.create(createBookDTO.getAuthor())));
+            book.setGenres(genreService.getGenre(genreService.create(createBookDTO.getGenres())));
+            return modelMapper.map(repository.save(book), BookDTO.class);
+        } else throw new ValidationException("Book already exists");
     }
 
     public List<BookDTO> getAll() {
         return repository.findAll().stream().map(book -> modelMapper.map(book, BookDTO.class)).toList();
     }
+
+    public BookDTO getById(Long id) {
+        BookDTO bookDTO = repository
+                .findById(id)
+                .map(book -> modelMapper.map(book, BookDTO.class)).get();
+//       .orElseThrow(() -> new ChangeSetPersister.NotFoundException("Book not found"));
+        return bookDTO;
+    }
+
+    public void deleteBook(Long id) {
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+        } else {
+            throw new NotFoundException("Book not found");
+        }
+    }
+
+//    public List<BookDTO> getBooksByGenreID() {
+//        return repository.findAll().stream().filter(book -> book.getGenreList().get()).map(book -> modelMapper.map(book, BookDTO.class)).toList();
+//    }
 }

@@ -1,22 +1,20 @@
 package com.example.SpringProject.DTO;
 
-import com.sun.istack.NotNull;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 public class CreateBookDTO {
+    private Long id;
     @NotBlank
     @NotNull
     private String title;
-    @NotBlank
-    @NotNull
-    private AuthorDTO authorDTO;
-    @NotBlank
-    @NotNull
-    private GenreDTO genreDTO;
+    private AuthorDTO author;
+    private List<String> genres;
     @Min(1)
     private int pages;
 

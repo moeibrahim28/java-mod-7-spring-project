@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class AuthorDTO {
-    @JsonProperty("author_name")
+    private Long id;
     private String authorName;
 }

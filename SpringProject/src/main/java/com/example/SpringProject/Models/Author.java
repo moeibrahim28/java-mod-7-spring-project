@@ -6,7 +6,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Authors")
@@ -20,9 +23,6 @@ public class Author {
     @NotNull
     private String name;
 
-    @OneToMany
-    private List<Book> bookList;
-
-    @OneToMany
-    private List<Genre> genreList;
+    @OneToMany(mappedBy = "author")
+    private Set<Book> bookSet= new HashSet<>();
 }

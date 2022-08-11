@@ -7,13 +7,14 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "BugUsers")
-@Table(name = "\"BugUsers\"")
+@Entity(name = "Users")
+@Table(name = "\"Users\"")
 @Getter
 @Setter
-public class BugUser {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,5 +27,5 @@ public class BugUser {
     private String password;
 
     @OneToMany
-    private List<ReadingList> readingLists;
+    private List<ReadingList> readingLists = new ArrayList<>();
 }

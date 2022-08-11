@@ -2,7 +2,7 @@ package com.example.SpringProject.Services;
 
 import com.example.SpringProject.DTO.CreateUserDTO;
 import com.example.SpringProject.DTO.UserDTO;
-import com.example.SpringProject.Models.BugUser;
+import com.example.SpringProject.Models.User;
 import com.example.SpringProject.Repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class UserService {
     private ModelMapper modelMapper;
 
     public UserDTO create(CreateUserDTO createUserDTO) {
-        BugUser user = modelMapper.map(createUserDTO, BugUser.class);
+        User user = modelMapper.map(createUserDTO, User.class);
         return modelMapper.map(repository.save(user), UserDTO.class);
     }
 

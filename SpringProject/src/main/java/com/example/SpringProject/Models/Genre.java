@@ -6,7 +6,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Genres")
@@ -17,12 +20,11 @@ public class Genre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
-    @NotNull
     private String name;
 
-    @ManyToOne
-    private Author author;
-
-    @OneToMany
-    private List<Book> bookList;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "genres_books",
+    joinColumns = @JoinColumn(name = "genre_id"),
+    inverseJoinColumns = @JoinColumn(name = "book_id"))
+    private Set<Book> bookSet = new HashSet<>();
 }

@@ -1,29 +1,44 @@
 package com.example.SpringProject.Models;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Books")
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
-    private List<ReadingList> readingLists;
+    @NotBlank
+    @NotNull
+    private String title;
 
+    @Min(1)
+    private int pages;
 
+    @CreatedDate
+    @Column(name = "published_at")
+    private LocalDateTime published;
 
-    @ManyToMany
-    @JoinTable(name="BooksList",
-    joinColumns = @JoinColumn(name = "genre_id"))
-    private List<Genre> genreList;
+    @ManyToMany(mappedBy = "bookSet",cascade = CascadeType.ALL)
+    private Set<Genre> genres = new HashSet<>();
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Author author;
 }
