@@ -34,6 +34,7 @@ public class BookService {
     @Autowired
     private ModelMapper modelMapper;
 
+    //creates book and puts it in repository and displays bookDTO to user
     public BookDTO create(CreateBookDTO createBookDTO) {
         if (!repository.existsById(createBookDTO.getId())) {
             Book book = modelMapper.map(createBookDTO, Book.class);
@@ -70,6 +71,7 @@ public class BookService {
         return bookDTO;
     }
 
+    //delete book from genres then deletes the actual book from repository
     public void deleteBook(Long id) {
 
         if (repository.existsById(id)) {
@@ -89,6 +91,7 @@ public class BookService {
         }
     }
 
+    //creates list of books out of a list of bookIDs for reading lists
     public List<Book> getBooks(List<Long> bookIDs) {
         List<Book> bookList = new ArrayList<>();
         for (Long id : bookIDs) {
@@ -99,6 +102,7 @@ public class BookService {
         return bookList;
     }
 
+    //takes list of books and transforms them into a list of bookDTOs
     public List<BookDTO> getBookDTOs(List<Book> books) {
         List<BookDTO> bookList = new ArrayList<>();
         for (Book book : books) {
@@ -112,6 +116,7 @@ public class BookService {
         return bookList;
     }
 
+    //put mapping method for updating a book by its ID
     public BookDTO updateBook(Long id, UpdateBookDTO updateBookDTO) {
         if (repository.existsById(id)) {
             List<Genre> genreList = genreService.create(updateBookDTO.getGenres());
@@ -135,7 +140,9 @@ public class BookService {
             }
             author.getBookSet().add(book);
             repository.save(book);
+            //check if any genres are now empty and delete them
             genreService.clearEmptyGenres();
+            //dto creation for user to see result
             BookDTO bookDTO = new BookDTO();
             bookDTO.setAuthor(authorService.getAuthorDTO(book.getAuthor()));
             bookDTO.setGenres(genreService.getGenre(book.getGenres()));

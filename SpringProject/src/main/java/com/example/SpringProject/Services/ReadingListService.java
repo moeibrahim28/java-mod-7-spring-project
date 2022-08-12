@@ -27,6 +27,8 @@ public class ReadingListService {
     @Autowired
     private ModelMapper modelMapper;
 
+    //takes createUserReadingListDTO object and creates a ReadingListDTO
+    //saves reading list ot repository
     public ReadingListDTO create(CreateUserReadingListDTO createUserReadingListDTO) {
         ReadingList readingList = new ReadingList();
         User user = getUser(createUserReadingListDTO.getUser());
@@ -44,6 +46,7 @@ public class ReadingListService {
         return readingListDTO;
     }
 
+    //    transforms userDTO to user object
     public User getUser(UserDTO userDTO){
         if(!userRepository.existsById(userDTO.getId())){
             throw new NotFoundException("User doesnt exist");
@@ -54,6 +57,7 @@ public class ReadingListService {
         }
     }
 
+//    transforms user object to userDTO
     public UserDTO getUserDTO(User user){
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
@@ -61,6 +65,7 @@ public class ReadingListService {
         return userDTO;
     }
 
+    //returns readinglistDTO by using user_if and list_id
     public ReadingListDTO getById(Long id,Long list_id) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(id);
@@ -73,6 +78,7 @@ public class ReadingListService {
         return readingListDTO;
     }
 
+    //returns a list of readingListDTOs using userID
     public List<ReadingListDTO> getAll(Long id) {
         List<ReadingListDTO> readingListDTOList = new ArrayList<>();
         UserDTO userDTO = new UserDTO();

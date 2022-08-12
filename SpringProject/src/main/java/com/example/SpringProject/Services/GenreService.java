@@ -32,6 +32,7 @@ public class GenreService {
     @Autowired
     private ModelMapper modelMapper;
 
+    //creates genres and adds them to the repository if they don't already exist
     public List<Genre> create(List<String> genreNames) {
         List<Genre> genreList = new ArrayList<>();
 
@@ -48,6 +49,7 @@ public class GenreService {
         return genreList;
     }
 
+    //transforms list of genres to DTOs
     public List<GenreDTO> getGenre(List<Genre> genreList) {
         List<GenreDTO> genreSet = new ArrayList<>();
         for(Genre genre: genreList){
@@ -62,6 +64,7 @@ public class GenreService {
         repository.save(genre);
     }
 
+    //returns all books with specified genre id
     public List<BookDTO> getById(Long id) {
         List<BookDTO> bookDTOList = repository
                 .findById(id).orElseThrow(() -> new NotFoundException("Book not found")).getBookSet().stream()
@@ -77,6 +80,7 @@ public class GenreService {
         return bookDTOList;
     }
 
+    //clears empty genres from repository
     public void clearEmptyGenres(){
         List<Genre> genreList = repository.findAll();
         for(Genre g : genreList){

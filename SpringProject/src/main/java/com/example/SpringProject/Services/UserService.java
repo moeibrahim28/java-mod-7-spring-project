@@ -24,10 +24,12 @@ public class UserService {
         return modelMapper.map(repository.save(user), UserDTO.class);
     }
 
+    //gets all users as userDTOs
     public List<UserDTO> getAll() {
         return repository.findAll().stream().map(user -> modelMapper.map(user, UserDTO.class)).toList();
     }
 
+    //delete user by id
     public void deleteById(Long id) {
         if(repository.existsById(id)) {
             repository.deleteById(id);

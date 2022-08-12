@@ -16,6 +16,8 @@ public class AuthorService {
     @Autowired
     private ModelMapper modelMapper;
 
+    //creates author from user input and returns dto
+    //saves author to repository
     public AuthorDTO create(AuthorDTO authorDTO) {
         if (!repository.existsById(authorDTO.getId())) {
             Author author = new Author();
@@ -30,6 +32,7 @@ public class AuthorService {
         }
     }
 
+    //transforms authorDTO to author object
     public Author getAuthor(AuthorDTO authorDTO) {
         Author author = new Author();
         author.setName(authorDTO.getAuthorName());
@@ -37,6 +40,7 @@ public class AuthorService {
         return author;
     }
 
+    //transforms author object to AuthorDTO
     public AuthorDTO getAuthorDTO(Author author) {
         AuthorDTO authorDTO = new AuthorDTO();
         authorDTO.setAuthorName(author.getName());
@@ -44,8 +48,4 @@ public class AuthorService {
         return authorDTO;
     }
 
-    public Author updateAuthor(Author author) {
-        Author author1 = repository.getReferenceById(author.getId());
-        return repository.save(author1);
-    }
 }
