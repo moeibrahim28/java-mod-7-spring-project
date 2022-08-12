@@ -18,8 +18,8 @@ public class GenreController {
     private GenreService genreService;
 
 
-//    @GetMapping("/{id}/books")
-//    public List<BookDTO> getBook(@PathVariable Long id) {
-//        return genreService.getById(id);
-//    }
+    @GetMapping("/{id}/books")
+    public List<BookDTO> getBook(@PathVariable Long id) {
+        return genreService.getById(id);
+    }
 }

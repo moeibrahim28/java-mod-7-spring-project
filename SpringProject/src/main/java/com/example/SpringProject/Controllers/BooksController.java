@@ -39,7 +39,7 @@ public class BooksController {
     public void deleteBook(@PathVariable Long id) {
         if(bookService.getById(id)!=null){
             bookService.deleteBook(id);
-        };
+        }
     }
 }
 

@@ -8,6 +8,5 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class GenreDTO {
-
-    private String genreName;
+    private String genre;
 }

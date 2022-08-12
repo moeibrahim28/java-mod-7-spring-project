@@ -37,6 +37,18 @@ public class AuthorService {
     public Author getAuthor(AuthorDTO authorDTO) {
         Author author = new Author();
         author.setName(authorDTO.getAuthorName());
+        author.setId(authorDTO.getId());
         return author;
+    }
+
+    public AuthorDTO getAuthorDTO(Author author) {
+        AuthorDTO authorDTO = new AuthorDTO();
+        authorDTO.setAuthorName(author.getName());
+        authorDTO.setId(author.getId());
+        return authorDTO;
+    }
+
+    public void updateAuthor(Author author){
+        repository.save(author);
     }
 }

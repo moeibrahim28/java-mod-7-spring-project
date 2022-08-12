@@ -1,12 +1,13 @@
 package com.example.SpringProject.DTO;
 
-import com.example.SpringProject.Models.ReadingList;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class UserDTO {
+public class ReadingListDTO {
     private Long id;
-    private String username;
+    private String name;
+    private UserDTO user;
+    private List<BookDTO> books;
 }

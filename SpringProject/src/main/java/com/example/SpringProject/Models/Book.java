@@ -37,7 +37,7 @@ public class Book {
     private LocalDateTime published;
 
     @ManyToMany(mappedBy = "bookSet",cascade = CascadeType.ALL)
-    private Set<Genre> genres = new HashSet<>();
+    private List<Genre> genres = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Author author;

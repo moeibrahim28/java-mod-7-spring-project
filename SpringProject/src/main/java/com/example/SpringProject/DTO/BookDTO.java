@@ -1,5 +1,6 @@
 package com.example.SpringProject.DTO;
 
+import com.example.SpringProject.Models.Author;
 import com.example.SpringProject.Models.Genre;
 import com.sun.istack.NotNull;
 import lombok.Data;
@@ -12,9 +13,9 @@ import java.util.Set;
 
 @Data
 public class BookDTO {
-    private String authorName;
+    private AuthorDTO author;
     private String title;
     private int pages;
-    private Set<GenreDTO> genreSet;
+    private List<GenreDTO> genres;
 
 }
