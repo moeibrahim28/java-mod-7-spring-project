@@ -41,7 +41,9 @@ public class GenreService {
     public Set<Genre> getGenre(Set<GenreDTO> genreList) {
         Set<Genre> genreSet = new HashSet<>();
         for(GenreDTO genre: genreList){
-            genreSet.add(modelMapper.map(genre,Genre.class));
+            Genre newGenre = new Genre();
+            newGenre.setName(genre.getGenreName());
+            genreSet.add(newGenre);
         }
         return genreSet;
     }

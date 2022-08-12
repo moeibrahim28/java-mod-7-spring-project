@@ -7,7 +7,5 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 public class CreateUserReadingListDTO {
-    @JsonProperty("readingList")
-    @NotNull
     private List<BookDTO> bookDTOList;
 }

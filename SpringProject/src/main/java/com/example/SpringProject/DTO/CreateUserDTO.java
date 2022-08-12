@@ -8,11 +8,6 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class CreateUserDTO {
-    @NotBlank
-    @NotNull
     private String username;
-    @NotBlank
-    @NotNull
-    @Length(min = 4)
     private String password;
 }

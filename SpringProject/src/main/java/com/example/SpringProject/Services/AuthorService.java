@@ -26,9 +26,9 @@ public class AuthorService {
             Author author = new Author();
             author.setName(authorDTO.getAuthorName());
             repository.save(author);
-            AuthorDTO newauthorDTO = new AuthorDTO();
-            newauthorDTO.setAuthorName(author.getName());
-            return authorDTO;
+            AuthorDTO newAuthorDTO = new AuthorDTO();
+            newAuthorDTO.setAuthorName(author.getName());
+            return newAuthorDTO;
         } else {
             return modelMapper.map(repository.existsById(authorDTO.getId()), AuthorDTO.class);
         }

@@ -5,11 +5,13 @@ import com.example.SpringProject.Exceptions.NotFoundException;
 import com.example.SpringProject.Exceptions.ValidationException;
 import com.example.SpringProject.Models.Author;
 import com.example.SpringProject.Models.Book;
+import com.example.SpringProject.Models.Genre;
 import com.example.SpringProject.Repositories.BookRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,7 +36,19 @@ public class BookService {
             book.setTitle(createBookDTO.getTitle());
             book.setAuthor(authorService.getAuthor(authorService.create(createBookDTO.getAuthor())));
             book.setGenres(genreService.getGenre(genreService.create(createBookDTO.getGenres())));
-            return modelMapper.map(repository.save(book), BookDTO.class);
+            BookDTO bookDTO = new BookDTO();
+            bookDTO.setPages(book.getPages());
+            bookDTO.setTitle(book.getTitle());
+            bookDTO.setAuthorName(book.getAuthor().getName());
+            Set<GenreDTO> genreDTOSet = new HashSet<>();
+            for(Genre genre : book.getGenres()){
+
+                GenreDTO genreDTO = new GenreDTO();
+                genreDTO.setGenreName(genre.getName());
+            genreDTOSet.add(genreDTO);}
+            bookDTO.setGenreSet(genreDTOSet);
+            repository.save(book);
+            return bookDTO;
         } else throw new ValidationException("Book already exists");
     }
 

@@ -10,8 +10,6 @@ import java.util.List;
 @Data
 public class BookListDTO {
     @JsonProperty("readingList_id")
-    @Positive
-    @NotNull
     private Long id;
     private List<BookDTO> bookDTOList;
 }
