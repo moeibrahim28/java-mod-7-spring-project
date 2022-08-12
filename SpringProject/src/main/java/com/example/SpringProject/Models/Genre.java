@@ -25,7 +25,7 @@ public class Genre {
     private Long id;
     private String name;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "genres_books",
     joinColumns = @JoinColumn(name = "genre_id"),
     inverseJoinColumns = @JoinColumn(name = "book_id"))

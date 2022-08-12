@@ -21,7 +21,7 @@ public class ReadingList {
     @ManyToOne
     private User user;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "readingLists_books",
             joinColumns = @JoinColumn(name = "readinglist_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id"))

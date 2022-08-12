@@ -8,6 +8,7 @@ import com.example.SpringProject.Models.Book;
 import com.example.SpringProject.Models.Genre;
 import com.example.SpringProject.Models.User;
 import com.example.SpringProject.Repositories.BookRepository;
+import com.example.SpringProject.Repositories.GenreRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ import java.util.Set;
 public class BookService {
     @Autowired
     private BookRepository repository;
+
+    @Autowired
+    private GenreRepository genreRepository;
 
     @Autowired
     private AuthorService authorService;
@@ -63,13 +67,18 @@ public class BookService {
     public BookDTO getById(Long id) {
         BookDTO bookDTO = repository
                 .findById(id)
-                .map(book -> modelMapper.map(book, BookDTO.class)).get();
-//       .orElseThrow(() -> new ChangeSetPersister.NotFoundException("Book not found"));
+                .map(book -> modelMapper.map(book, BookDTO.class)).orElseThrow(() -> new NotFoundException("Book not found"));
         return bookDTO;
     }
 
     public void deleteBook(Long id) {
         if (repository.existsById(id)) {
+            List<Genre> genreList = genreRepository.findAll();
+            for(Genre g : genreList){
+                if(g.getBookSet().contains(repository.findById(id).get())){
+                    g.getBookSet().remove(repository.findById(id).get());
+                }
+            }
             repository.deleteById(id);
         } else {
             throw new NotFoundException("Book not found");

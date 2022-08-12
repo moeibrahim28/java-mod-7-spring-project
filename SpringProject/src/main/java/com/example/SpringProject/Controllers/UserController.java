@@ -17,12 +17,17 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public UserDTO createUser(@Valid @RequestBody CreateUserDTO createUserDTO){
+    public UserDTO createUser(@Valid @RequestBody CreateUserDTO createUserDTO) {
         return userService.create(createUserDTO);
     }
 
     @GetMapping
     public List<UserDTO> getAllUsers() {
         return userService.getAll();
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteById(id);
     }
 }

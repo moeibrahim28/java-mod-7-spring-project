@@ -2,6 +2,7 @@ package com.example.SpringProject.Services;
 
 import com.example.SpringProject.DTO.CreateUserDTO;
 import com.example.SpringProject.DTO.UserDTO;
+import com.example.SpringProject.Exceptions.NotFoundException;
 import com.example.SpringProject.Models.User;
 import com.example.SpringProject.Repositories.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -25,5 +26,14 @@ public class UserService {
 
     public List<UserDTO> getAll() {
         return repository.findAll().stream().map(user -> modelMapper.map(user, UserDTO.class)).toList();
+    }
+
+    public void deleteById(Long id) {
+        if(repository.existsById(id)) {
+            repository.deleteById(id);
+        }
+        else {
+            throw new NotFoundException("Activity not found");
+        }
     }
 }

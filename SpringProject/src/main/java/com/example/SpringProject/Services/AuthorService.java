@@ -1,12 +1,7 @@
 package com.example.SpringProject.Services;
 
 import com.example.SpringProject.DTO.AuthorDTO;
-import com.example.SpringProject.DTO.BookDTO;
-import com.example.SpringProject.DTO.CreateBookDTO;
-import com.example.SpringProject.DTO.GenreDTO;
 import com.example.SpringProject.Models.Author;
-import com.example.SpringProject.Models.Book;
-import com.example.SpringProject.Models.Genre;
 import com.example.SpringProject.Repositories.AuthorRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +23,7 @@ public class AuthorService {
             repository.save(author);
             AuthorDTO newAuthorDTO = new AuthorDTO();
             newAuthorDTO.setAuthorName(author.getName());
+            newAuthorDTO.setId(author.getId());
             return newAuthorDTO;
         } else {
             return modelMapper.map(repository.existsById(authorDTO.getId()), AuthorDTO.class);
@@ -48,7 +44,8 @@ public class AuthorService {
         return authorDTO;
     }
 
-    public void updateAuthor(Author author){
-        repository.save(author);
+    public Author updateAuthor(Author author) {
+        Author author1 = repository.getReferenceById(author.getId());
+        return repository.save(author1);
     }
 }

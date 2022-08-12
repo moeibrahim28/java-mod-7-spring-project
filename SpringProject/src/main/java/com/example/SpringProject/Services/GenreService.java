@@ -39,7 +39,7 @@ public class GenreService {
             if (repository.findByName(genreNames.get(i))==null) {
                 Genre genre = new Genre();
                 genre.setName(genreNames.get(i));
-//                repository.save(genre);
+                repository.save(genre);
                 genreList.add(genre);
             } else {
                 genreList.add(modelMapper.map(repository.findByName(genreNames.get(i)), Genre.class));
