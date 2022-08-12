@@ -77,4 +77,13 @@ public class GenreService {
         return bookDTOList;
     }
 
+    public void clearEmptyGenres(){
+        List<Genre> genreList = repository.findAll();
+        for(Genre g : genreList){
+            if(g.getBookSet().size()==0){
+                repository.delete(g);
+            }
+        }
+    }
+
 }

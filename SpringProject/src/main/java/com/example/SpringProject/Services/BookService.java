@@ -78,6 +78,9 @@ public class BookService {
             for (Genre g : genreList) {
                 if (g.getBookSet().contains(book)) {
                     g.getBookSet().remove(repository.findById(id).get());
+                    if (g.getBookSet().size() == 0) {
+                        genreRepository.delete(g);
+                    }
                 }
             }
             repository.deleteById(id);
@@ -132,6 +135,7 @@ public class BookService {
             }
             author.getBookSet().add(book);
             repository.save(book);
+            genreService.clearEmptyGenres();
             BookDTO bookDTO = new BookDTO();
             bookDTO.setAuthor(authorService.getAuthorDTO(book.getAuthor()));
             bookDTO.setGenres(genreService.getGenre(book.getGenres()));
@@ -141,5 +145,7 @@ public class BookService {
             return bookDTO;
         } else throw new ValidationException("Book already exists");
     }
+
+
 }
 
