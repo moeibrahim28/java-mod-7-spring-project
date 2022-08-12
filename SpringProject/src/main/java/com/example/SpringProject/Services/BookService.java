@@ -1,12 +1,13 @@
 package com.example.SpringProject.Services;
 
-import com.example.SpringProject.DTO.*;
+import com.example.SpringProject.DTO.BookDTO;
+import com.example.SpringProject.DTO.CreateBookDTO;
+import com.example.SpringProject.DTO.UpdateBookDTO;
 import com.example.SpringProject.Exceptions.NotFoundException;
 import com.example.SpringProject.Exceptions.ValidationException;
 import com.example.SpringProject.Models.Author;
 import com.example.SpringProject.Models.Book;
 import com.example.SpringProject.Models.Genre;
-import com.example.SpringProject.Models.User;
 import com.example.SpringProject.Repositories.BookRepository;
 import com.example.SpringProject.Repositories.GenreRepository;
 import org.modelmapper.ModelMapper;
@@ -14,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class BookService {
@@ -44,7 +43,7 @@ public class BookService {
             book.setTitle(createBookDTO.getTitle());
             book.setAuthor(author);
             book.setGenres(genreList);
-            for(Genre g: genreList){
+            for (Genre g : genreList) {
                 g.getBookSet().add(book);
 
             }
@@ -72,10 +71,12 @@ public class BookService {
     }
 
     public void deleteBook(Long id) {
+
         if (repository.existsById(id)) {
+            Book book = repository.findById(id).get();
             List<Genre> genreList = genreRepository.findAll();
-            for(Genre g : genreList){
-                if(g.getBookSet().contains(repository.findById(id).get())){
+            for (Genre g : genreList) {
+                if (g.getBookSet().contains(book)) {
                     g.getBookSet().remove(repository.findById(id).get());
                 }
             }
@@ -85,31 +86,60 @@ public class BookService {
         }
     }
 
-    public List<Book> getBooks(List<Long> bookIDs){
+    public List<Book> getBooks(List<Long> bookIDs) {
         List<Book> bookList = new ArrayList<>();
-        for(Long id:bookIDs){
-            if(repository.findById(id)!=null){
+        for (Long id : bookIDs) {
+            if (repository.findById(id) != null) {
                 bookList.add(repository.findById(id).get());
-            }
-            else throw new NotFoundException("Book doesnt exist");
+            } else throw new NotFoundException("Book doesnt exist");
         }
         return bookList;
     }
 
-    public List<BookDTO> getBookDTOs(List<Book> books){
+    public List<BookDTO> getBookDTOs(List<Book> books) {
         List<BookDTO> bookList = new ArrayList<>();
-        for(Book book:books){
-            BookDTO bookDTO = new BookDTO()    ;
+        for (Book book : books) {
+            BookDTO bookDTO = new BookDTO();
             bookDTO.setPages(book.getPages());
             bookDTO.setTitle(book.getTitle());
             bookDTO.setGenres(genreService.getGenre(book.getGenres()));
-        bookDTO.setAuthor(authorService.getAuthorDTO(book.getAuthor()));
-        bookList.add(bookDTO);
+            bookDTO.setAuthor(authorService.getAuthorDTO(book.getAuthor()));
+            bookList.add(bookDTO);
         }
         return bookList;
     }
 
-//    public List<BookDTO> getBooksByGenreID() {
-//        return repository.findAll().stream().filter(book -> book.getGenres().contains()).map(book -> modelMapper.map(book, BookDTO.class)).toList();
-//    }
+    public BookDTO updateBook(Long id, UpdateBookDTO updateBookDTO) {
+        if (repository.existsById(id)) {
+            List<Genre> genreList = genreService.create(updateBookDTO.getGenres());
+            Author author = authorService.getAuthor(updateBookDTO.getAuthor());
+            Book book = repository.findById(id).get();
+            book.setPages(updateBookDTO.getPages());
+            book.setTitle(updateBookDTO.getTitle());
+            book.setAuthor(author);
+
+            for (Genre g : book.getGenres()) {
+                if (g.getBookSet().contains(book)) {
+                    g.getBookSet().remove(book);
+                }
+            }
+
+            book.getGenres().clear();
+            book.setGenres(genreList);
+            for (Genre g : genreList) {
+                g.getBookSet().add(book);
+
+            }
+            author.getBookSet().add(book);
+            repository.save(book);
+            BookDTO bookDTO = new BookDTO();
+            bookDTO.setAuthor(authorService.getAuthorDTO(book.getAuthor()));
+            bookDTO.setGenres(genreService.getGenre(book.getGenres()));
+            bookDTO.setTitle(book.getTitle());
+            bookDTO.setPages(book.getPages());
+
+            return bookDTO;
+        } else throw new ValidationException("Book already exists");
+    }
 }
+

@@ -36,7 +36,7 @@ public class Book {
     @Column(name = "published_at")
     private LocalDateTime published;
 
-    @ManyToMany(mappedBy = "bookSet")
+    @ManyToMany(mappedBy = "bookSet", cascade = CascadeType.DETACH)
     private List<Genre> genres = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL)

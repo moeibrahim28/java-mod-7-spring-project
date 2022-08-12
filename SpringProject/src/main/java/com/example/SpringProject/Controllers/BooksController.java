@@ -1,9 +1,6 @@
 package com.example.SpringProject.Controllers;
 
-import com.example.SpringProject.DTO.BookDTO;
-import com.example.SpringProject.DTO.CreateBookDTO;
-import com.example.SpringProject.DTO.CreateUserDTO;
-import com.example.SpringProject.DTO.UserDTO;
+import com.example.SpringProject.DTO.*;
 import com.example.SpringProject.Services.BookService;
 import com.example.SpringProject.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +30,11 @@ public class BooksController {
     @GetMapping("/{id}")
     public BookDTO getBook(@PathVariable Long id) {
         return bookService.getById(id);
+    }
+
+    @PutMapping("/{id}")
+    public BookDTO updateBook(@PathVariable Long id,@Valid @RequestBody UpdateBookDTO updateBookDTO) {
+        return bookService.updateBook(id,updateBookDTO);
     }
 
     @DeleteMapping("/{id}")
