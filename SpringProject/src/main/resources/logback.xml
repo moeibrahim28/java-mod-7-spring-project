@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+    <appender name="Console-Appender" class="ch.qos.logback.core.ConsoleAppender">
+        <layout>
+            <pattern>CONSOLE: %msg%n</pattern>
+        </layout>
+    </appender>
+    <appender name="File-Appender" class="ch.qos.logback.core.FileAppender">
+        <file>spring-lab.log</file>
+        <encoder>
+            <pattern>[%.-3level] --- [THREAD:%thread] %-40.40logger{39}\n \t\t %msg\n</pattern>
+        </encoder>
+    </appender>
+        <logger name="com.example.SpringProject" level="TRACE">
+        <appender-ref ref="Console-Appender" />
+        <appender-ref ref="File-Appender" />
+    </logger>
+</configuration>

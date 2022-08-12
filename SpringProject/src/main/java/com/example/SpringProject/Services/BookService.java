@@ -8,8 +8,10 @@ import com.example.SpringProject.Exceptions.ValidationException;
 import com.example.SpringProject.Models.Author;
 import com.example.SpringProject.Models.Book;
 import com.example.SpringProject.Models.Genre;
+import com.example.SpringProject.Models.ReadingList;
 import com.example.SpringProject.Repositories.BookRepository;
 import com.example.SpringProject.Repositories.GenreRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class BookService {
     @Autowired
     private BookRepository repository;
@@ -32,11 +35,16 @@ public class BookService {
     private GenreService genreService;
 
     @Autowired
+    private ReadingListService readingListService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     //creates book and puts it in repository and displays bookDTO to user
     public BookDTO create(CreateBookDTO createBookDTO) {
+        log.trace("inside create book method");
         if (!repository.existsById(createBookDTO.getId())) {
+            log.info("book not found in repository so application creates a new one");
             Book book = modelMapper.map(createBookDTO, Book.class);
             List<Genre> genreList = genreService.create(createBookDTO.getGenres());
             Author author = authorService.getAuthor(createBookDTO.getAuthor());
@@ -50,6 +58,7 @@ public class BookService {
             }
             author.getBookSet().add(book);
             repository.save(book);
+            log.info("book saved to repository");
             BookDTO bookDTO = new BookDTO();
             bookDTO.setAuthor(authorService.getAuthorDTO(book.getAuthor()));
             bookDTO.setGenres(genreService.getGenre(book.getGenres()));
@@ -57,14 +66,19 @@ public class BookService {
             bookDTO.setPages(book.getPages());
 
             return bookDTO;
-        } else throw new ValidationException("Book already exists");
+        } else{
+            log.info("book already exists to request is denied");
+            throw new ValidationException("Book already exists");
+        }
     }
 
     public List<BookDTO> getAll() {
+        log.info("getting all books from repository");
         return repository.findAll().stream().map(book -> modelMapper.map(book, BookDTO.class)).toList();
     }
 
     public BookDTO getById(Long id) {
+        log.info("getting book by its specific id");
         BookDTO bookDTO = repository
                 .findById(id)
                 .map(book -> modelMapper.map(book, BookDTO.class)).orElseThrow(() -> new NotFoundException("Book not found"));
@@ -73,12 +87,14 @@ public class BookService {
 
     //delete book from genres then deletes the actual book from repository
     public void deleteBook(Long id) {
-
+        log.info("attempting to delete book if it exists");
         if (repository.existsById(id)) {
+            log.info("book found in repository");
             Book book = repository.findById(id).get();
             List<Genre> genreList = genreRepository.findAll();
             for (Genre g : genreList) {
                 if (g.getBookSet().contains(book)) {
+                    log.info("book is being removed from each genre it belongs to");
                     g.getBookSet().remove(repository.findById(id).get());
                     if (g.getBookSet().size() == 0) {
                         genreRepository.delete(g);
@@ -87,17 +103,22 @@ public class BookService {
             }
             repository.deleteById(id);
         } else {
+            log.info("book was not found in repository");
             throw new NotFoundException("Book not found");
         }
     }
 
     //creates list of books out of a list of bookIDs for reading lists
     public List<Book> getBooks(List<Long> bookIDs) {
+        log.info("getting books by their ids repository");
         List<Book> bookList = new ArrayList<>();
         for (Long id : bookIDs) {
             if (repository.findById(id) != null) {
                 bookList.add(repository.findById(id).get());
-            } else throw new NotFoundException("Book doesnt exist");
+            } else {
+                log.info("book did not exist");
+                throw new NotFoundException("Book doesnt exist");
+            }
         }
         return bookList;
     }
@@ -118,7 +139,9 @@ public class BookService {
 
     //put mapping method for updating a book by its ID
     public BookDTO updateBook(Long id, UpdateBookDTO updateBookDTO) {
+        log.trace("inside update book method");
         if (repository.existsById(id)) {
+            log.info("book found to be updated");
             List<Genre> genreList = genreService.create(updateBookDTO.getGenres());
             Author author = authorService.getAuthor(updateBookDTO.getAuthor());
             Book book = repository.findById(id).get();
@@ -138,6 +161,7 @@ public class BookService {
             }
             author.getBookSet().add(book);
             repository.save(book);
+            log.info("book saved to repository");
             //check if any genres are now empty and delete them
             genreService.clearEmptyGenres();
             //dto creation for user to see result
@@ -146,7 +170,7 @@ public class BookService {
             bookDTO.setGenres(genreService.getGenre(book.getGenres()));
             bookDTO.setTitle(book.getTitle());
             bookDTO.setPages(book.getPages());
-
+            log.info("bookDTO returned to user");
             return bookDTO;
         } else throw new ValidationException("Book already exists");
     }
@@ -154,13 +178,18 @@ public class BookService {
     //return bookDTO for search by title
     public BookDTO getByTitle(String title) {
         BookDTO bookDTO = new BookDTO();
+        log.info("attempting to find book by title");
         if (repository.findByTitle(title) != null) {
+            log.info("book with given title found");
             Book book = repository.findByTitle(title);
             bookDTO.setAuthor(authorService.getAuthorDTO(book.getAuthor()));
             bookDTO.setGenres(genreService.getGenre(book.getGenres()));
             bookDTO.setTitle(book.getTitle());
             bookDTO.setPages(book.getPages());
-        } else throw new NotFoundException("Book not found");
+        } else {
+            log.info("book with that title was not found");
+            throw new NotFoundException("Book not found");
+        }
         return bookDTO;
     }
 }
