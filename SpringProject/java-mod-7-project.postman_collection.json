@@ -418,6 +418,27 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "get book by title",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/books/predator",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"books",
+						"predator"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
