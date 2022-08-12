@@ -127,9 +127,7 @@ public class BookService {
             book.setAuthor(author);
 
             for (Genre g : book.getGenres()) {
-                if (g.getBookSet().contains(book)) {
-                    g.getBookSet().remove(book);
-                }
+                g.getBookSet().remove(book);
             }
 
             book.getGenres().clear();
@@ -153,17 +151,16 @@ public class BookService {
         } else throw new ValidationException("Book already exists");
     }
 
-
+    //return bookDTO for search by title
     public BookDTO getByTitle(String title) {
         BookDTO bookDTO = new BookDTO();
-        if(repository.findByTitle(title)!=null){
+        if (repository.findByTitle(title) != null) {
             Book book = repository.findByTitle(title);
             bookDTO.setAuthor(authorService.getAuthorDTO(book.getAuthor()));
             bookDTO.setGenres(genreService.getGenre(book.getGenres()));
             bookDTO.setTitle(book.getTitle());
             bookDTO.setPages(book.getPages());
-        }
-        else throw new NotFoundException("Book not found");
+        } else throw new NotFoundException("Book not found");
         return bookDTO;
     }
 }
