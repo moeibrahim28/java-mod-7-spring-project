@@ -154,5 +154,17 @@ public class BookService {
     }
 
 
+    public BookDTO getByTitle(String title) {
+        BookDTO bookDTO = new BookDTO();
+        if(repository.findByTitle(title)!=null){
+            Book book = repository.findByTitle(title);
+            bookDTO.setAuthor(authorService.getAuthorDTO(book.getAuthor()));
+            bookDTO.setGenres(genreService.getGenre(book.getGenres()));
+            bookDTO.setTitle(book.getTitle());
+            bookDTO.setPages(book.getPages());
+        }
+        else throw new NotFoundException("Book not found");
+        return bookDTO;
+    }
 }
 

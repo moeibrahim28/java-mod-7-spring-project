@@ -28,8 +28,13 @@ public class BooksController {
     }
 
     @GetMapping("/{id}")
-    public BookDTO getBook(@PathVariable Long id) {
+    public BookDTO getBookByID(@PathVariable Long id) {
         return bookService.getById(id);
+    }
+
+    @GetMapping("/titles/{title}")
+    public BookDTO getBookByTitle(@PathVariable(value = "title") String title) {
+        return bookService.getByTitle(title);
     }
 
     @PutMapping("/{id}")
