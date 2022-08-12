@@ -8,5 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class GenreDTO {
+    @NotNull
+    @NotBlank
     private String genre;
 }

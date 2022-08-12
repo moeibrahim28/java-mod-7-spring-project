@@ -10,6 +10,8 @@ import java.util.List;
 @Data
 public class CreateBookDTO {
     private Long id;
+    @NotNull
+    @NotBlank
     private String title;
     private AuthorDTO author;
     private List<String> genres;
